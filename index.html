@@ -124,6 +124,50 @@
                 font-size: 0.875em;
             }
         }
+        /*NEW
+        /* === removing default button style ===*/
+        .button {
+        margin: 0;
+        height: auto;
+        background: transparent;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        }
+
+        /* button styling */
+        .button {
+        --border-right: 6px;
+        --text-stroke-color: rgba(255,255,255,0.6);
+        --animation-color: #37FF8B;
+        --fs-size: 2em;
+        letter-spacing: 3px;
+        text-decoration: none;
+        font-size: var(--fs-size);
+        font-family: "Arial";
+        position: relative;
+        text-transform: uppercase;
+        color: transparent;
+        -webkit-text-stroke: 1px var(--text-stroke-color);
+        }
+        /* this is the text, when you hover on button */
+        .hover-text {
+        position: absolute;
+        box-sizing: border-box;
+        content: attr(data-text);
+        color: var(--animation-color);
+        width: 0%;
+        inset: 0;
+        border-right: var(--border-right) solid var(--animation-color);
+        overflow: hidden;
+        transition: 0.5s;
+        -webkit-text-stroke: 1px var(--animation-color);
+        }
+        /* hover */
+        .button:hover .hover-text {
+        width: 100%;
+        filter: drop-shadow(0 0 23px var(--animation-color))
+        }
     </style>
 </head>
 <body>
@@ -136,7 +180,7 @@
     </header>
     <div id="animation"></div>
     <div id="portfolio">
-        <div class="portfolio-item" onmouseover="changeParticleColor(0xF2B807)">
+        <div class="portfolio-item" onmouseover="changeParticleColorAndButton(0xF2B807)">
             <h2>Proyecto 1: Prototipos avanzados</h2>
             <video style="width:100%" class="embed-responsive-item" autoplay loop muted>
                 <source src="https://modesign.es/wp-content/uploads/2024/04/Merge-videos-project.mp4" type="video/mp4">
@@ -144,7 +188,7 @@
             </video>
             <p>Experiencias interactivas con interfaces de usuario elegantes, flujos intuitivos y diseños detallados con un enfoque en la mejor experiencia para el usuario.</p>
         </div>
-        <div class="portfolio-item" onmouseover="changeParticleColor(0x8A1F8C)">
+        <div class="portfolio-item" onmouseover="changeParticleColorAndButton(0x8A1F8C)">
             <h2>Proyecto 2: Rediseño landing</h2>
             <video style="width:100%" class="embed-responsive-item" autoplay loop muted>
                 <source src="https://modesign.es/wp-content/uploads/2024/04/2024-04-17-20-41-52.mp4" type="video/mp4">
@@ -152,7 +196,7 @@
             </video>
             <p>Desde la simplificación de la navegación hasta la optimización del proceso de pago, mejorando cada paso del proceso de compra.</p>
         </div>
-        <div class="portfolio-item" onmouseover="changeParticleColor(0xBF1304)">
+        <div class="portfolio-item" onmouseover="changeParticleColorAndButton(0xBF1304)">
             <h2>Proyecto 3: Nueva funcionalidad</h2>
             <div class="embed-responsive embed-responsive-16by9">
                 <img style="width:100%" src="https://modesign.es/wp-content/uploads/2024/06/550shots_so.png" class="embed-responsive-item" alt="Nueva funcionalidad">
@@ -160,6 +204,13 @@
             <p>Implementación de una nueva función de compra exprés para una solución rápida y conveniente.</p>
         </div>
     </div>
+    <div>
+        <button id="downloadButton" class="button" data-text="Awesome" onclick="redirect()">
+            <span class="actual-text">&nbsp;Descargar&nbsp;CV&nbsp;</span>
+            <span aria-hidden="true" class="hover-text">&nbsp;Descargar&nbsp;CV&nbsp;</span>
+        </button>
+    </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         // Crear la escena
@@ -202,6 +253,21 @@
             particleSystem.material.color.setHex(color);
         }
 
+        // Cambiar color de las partículas y del botón
+        function changeParticleColorAndButton(color) {
+            changeParticleColor(color);
+            changeButtonColor(color);
+        }
+
+        // Cambiar color del botón
+        function changeButtonColor(color) {
+            const button = document.getElementById('downloadButton');
+            const hexColor = `#${color.toString(16).padStart(6, '0')}`;
+            button.style.setProperty('--animation-color', hexColor);
+            button.querySelector('.hover-text').style.webkitTextStrokeColor = hexColor;
+            button.querySelector('.hover-text').style.borderColor = hexColor;
+        }
+
         animate();
 
         // Ajustar el tamaño del renderizador al cambiar el tamaño de la ventana
@@ -224,6 +290,11 @@
                 }, 1000);
             }, 3000);
         });
+
+        // Descargar curriculum
+        function redirect() {
+            window.location.href = 'https://drive.google.com/file/d/1omCg1XjhNehjmYy5kBYqiNlDcpo_E2D8/view?usp=sharing';
+        };
     </script>
 </body>
 </html>
